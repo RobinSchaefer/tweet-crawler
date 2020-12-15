@@ -6,6 +6,7 @@ with io.open('requirements.txt') as f_in:
 
 setup(
     name='tweet-crawler',
+    version='0.0.1',
     author='Robin Schaefer',
     author_email='robin.schaefer@uni-potsdam.de',
     description='A tool for crawling tweets using Tweepy.',
@@ -13,11 +14,12 @@ setup(
     keywords='twitter api crawling',
     license='mit',
 #    namespace_packages=
-#    packages=
+    packages=find_packages(),
     install_requires=install_requires,
-#    entry_points={
-#        'console_scripts': [
-#
-#        ]
-#    }
+    entry_points={
+        'console_scripts': [
+            'crawl-tweets-by-ids=tweet_crawler.cli:crawl_tweets_by_ids',
+            'crawl-tweets-by-keyword=tweet_crawler.cli:crawl_tweets_by_keyword'
+        ]
+    }
 )
