@@ -9,7 +9,7 @@ from .api import init_api
 @click.argument('credential-dir', type=click.Path(exists=True))
 @click.argument('out-dir', type=click.Path(exists=False))
 @click.option('--keyword', help='')
-def collect_tweets_by_keyword(out_dir, credential_dir, keyword):
+def crawl_tweets_by_keyword(out_dir, credential_dir, keyword):
     '''
 
     '''
@@ -51,7 +51,7 @@ def collect_tweets_by_keyword(out_dir, credential_dir, keyword):
 @click.argument('credential-dir', type=click.Path(exists=True))
 @click.argument('id-dir', type=click.Path(exists=True))
 @click.argument('out-dir', type=click.Path(exists=False))
-def collect_tweets_by_ids(credential_dir, id_dir, out_dir):
+def crawl_tweets_by_ids(credential_dir, id_dir, out_dir):
     '''
 
     '''
