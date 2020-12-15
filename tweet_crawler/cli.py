@@ -1,16 +1,29 @@
+import click
+import io
+import json
 import tweepy
 
 from .api import init_api
 
-def collect_tweets_by_keyword(keyword, credentials, limit=None):
+@click.command()
+@click.argument('credential-dir', type=click.Path(exists=True))
+@click.argument('out-dir', type=click.Path(exists=False))
+@click.option('--keyword', help='')
+def collect_tweets_by_keyword(out_dir, credential_dir, keyword):
     '''
 
     '''
+
+    with io.open(credential_dir) as f_in:
+        credentials = json.load(f_in)
+
 
     api = init_api(credentials[0], # consumer_key
                    credentials[1], # consumer_secret
                    credentials[2], # access_token
                    credentials[3]) # access_token_secret
+
+    limit = None
 
     tweets =[]
 
@@ -31,13 +44,20 @@ def collect_tweets_by_keyword(keyword, credentials, limit=None):
     print('END: Tweet Collection')
     print('\nTotal # of tweets: {}'.format(len(tweets)))
 
-    return tweets
 
 
-def collect_tweets_by_ids(ids, credentials):
+
+@click.command()
+@click.argument('credential-dir', type=click.Path(exists=True))
+@click.argument('id-dir', type=click.Path(exists=True))
+@click.argument('out-dir', type=click.Path(exists=False))
+def collect_tweets_by_ids(credential_dir, id_dir, out_dir):
     '''
 
     '''
+
+    with io.open(credential_dir) as f_in:
+        credentials = json.load(f_in)
 
     api = init_api(credentials[0], # consumer_key
                    credentials[1], # consumer_secret
@@ -59,4 +79,5 @@ def collect_tweets_by_ids(ids, credentials):
     print('END: Tweet Collection')
     print('\nTotal # of tweets: {}'.format(len(tweets)))
 
-    return tweets
+    with io.open(out_dir, mode='w') as f_out:
+        json.drop(tweets, f_out)
