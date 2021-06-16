@@ -18,10 +18,10 @@ def crawl_tweets_by_keyword(out_dir, credential_dir, keyword):
         credentials = json.load(f_in)
 
 
-    api = init_api(credentials[0], # consumer_key
-                   credentials[1], # consumer_secret
-                   credentials[2], # access_token
-                   credentials[3]) # access_token_secret
+    api = init_api(credentials['consumer_key'],
+                   credentials['consumer_secret'], 
+                   credentials['access_token'], 
+                   credentials['access_token_secret'])
 
     limit = None
 
@@ -44,6 +44,9 @@ def crawl_tweets_by_keyword(out_dir, credential_dir, keyword):
     print('END: Tweet Collection')
     print('\nTotal # of tweets: {}'.format(len(tweets)))
 
+    with io.open(out_dir, mode='w') as f_out:
+        json.dump(tweets, f_out)
+
 
 
 
@@ -59,10 +62,14 @@ def crawl_tweets_by_ids(credential_dir, id_dir, out_dir):
     with io.open(credential_dir) as f_in:
         credentials = json.load(f_in)
 
-    api = init_api(credentials[0], # consumer_key
-                   credentials[1], # consumer_secret
-                   credentials[2], # access_token
-                   credentials[3]) # access_token_secret
+    api = init_api(credentials['consumer_key'],
+                   credentials['consumer_secret'], 
+                   credentials['access_token'], 
+                   credentials['access_token_secret']) 
+
+    with io.open(id_dir, mode='r') as f_in:
+        ids = f_in.readlines()
+        ids = [id_.strip() for id_ in ids]
 
     tweets =[]
 
@@ -80,4 +87,4 @@ def crawl_tweets_by_ids(credential_dir, id_dir, out_dir):
     print('\nTotal # of tweets: {}'.format(len(tweets)))
 
     with io.open(out_dir, mode='w') as f_out:
-        json.drop(tweets, f_out)
+        json.dump(tweets, f_out)
