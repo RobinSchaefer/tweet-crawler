@@ -1,8 +1,8 @@
 # Tweet Crawler
 
 This repo contains code for crawling tweets using the [Tweepy](https://www.tweepy.org/) 
-library. Tweets can be crawled using a keyword or tweet IDs. You need to 
-register with the [Twitter Developer Platform](https://developer.twitter.com/en)
+library. Tweets can be crawled using a keyword or tweet IDs. Before using this
+tool, you need to register with the [Twitter Developer Platform](https://developer.twitter.com/en)
 to get your credentials. These are needed to access the Twitter API.
 
 ## Installation
