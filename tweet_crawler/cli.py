@@ -14,6 +14,7 @@ def crawl_tweets_by_keyword(out_dir, credential_dir, keyword):
     '''
     Crawl tweets by keyword. 
 
+    \b
     Arguments: 
     credential-dir  The directory of the credential json file.
     out-dir The output directory where crawled tweets will be stored.
@@ -70,6 +71,7 @@ def crawl_tweets_by_ids(credential_dir, id_dir, out_dir):
     '''
     Crawl tweets by ids. 
 
+    \b
     Arguments: 
     credential-dir  The directory of the credential json file.
     id-dir  The directory of the id txt file.
