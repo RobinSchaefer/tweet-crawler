@@ -48,3 +48,6 @@ Usage: crawl-tweets-by-ids [OPTIONS] CREDENTIAL_DIR ID_DIR OUT_DIR
 Options:
   --help  Show this message and exit.
 ```
+## License
+
+MIT
