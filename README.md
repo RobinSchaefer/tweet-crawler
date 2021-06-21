@@ -30,7 +30,7 @@ Usage: crawl-tweets-by-keyword [OPTIONS] CREDENTIAL_DIR OUT_DIR
   out-dir The output directory where crawled tweets will be stored.
 
 Options:
-  --keyword TEXT  The keyword crawled tweets need to contain.
+  --keyword TEXT  The tweet keyword.
   --help          Show this message and exit.
 ```
 
