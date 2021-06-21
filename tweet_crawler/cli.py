@@ -9,7 +9,7 @@ from .api import init_api
 @click.command()
 @click.argument('credential-dir', type=click.Path(exists=True))
 @click.argument('out-dir', type=click.Path(exists=False))
-@click.option('--keyword', help='The keyword crawled tweets need to contain.')
+@click.option('--keyword', help='The tweet keyword.')
 def crawl_tweets_by_keyword(out_dir, credential_dir, keyword):
     '''
     Crawl tweets by keyword. 
