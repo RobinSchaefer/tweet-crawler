@@ -19,7 +19,8 @@ setup(
     entry_points={
         'console_scripts': [
             'crawl-tweets-by-ids=tweet_crawler.cli:crawl_tweets_by_ids',
-            'crawl-tweets-by-keyword=tweet_crawler.cli:crawl_tweets_by_keyword'
+            'crawl-tweets-by-keyword=tweet_crawler.cli:crawl_tweets_by_keyword',
+            'stream-tweets-by_keyword=tweet_crawler.cli:stream_tweets_by_keyword'
         ]
     }
 )
