@@ -61,8 +61,6 @@ def crawl_tweets_by_keyword(out_dir, credential_dir, keyword):
         json.dump(tweets, f_out)
 
 
-
-
 @click.command()
 @click.argument('credential-dir', type=click.Path(exists=True))
 @click.argument('id-dir', type=click.Path(exists=True))
@@ -113,3 +111,87 @@ def crawl_tweets_by_ids(credential_dir, id_dir, out_dir):
 
     with io.open(out_dir, mode='w') as f_out:
         json.dump(tweets, f_out)
+
+
+@click.command()
+@click.argument('credential-dir', type=click.Path(exists=True))
+@click.argument('out-dir', type=click.Path(exists=False))
+@click.option('--keyword', help='The tweet keyword.')
+def stream_tweets_by_keyword(out_dir, credential_dir, keyword):
+    '''
+    Stream tweets by keyword (using the Twitter streaming API). 
+
+    \b
+    Arguments: 
+    credential-dir  The directory of the credential json file.
+    out-dir The output directory where crawled tweets will be stored.
+
+    '''
+
+    with io.open(credential_dir) as f_in:
+        credentials = json.load(f_in)
+
+
+    api = init_api(credentials['consumer_key'],
+                   credentials['consumer_secret'], 
+                   credentials['access_token'], 
+                   credentials['access_token_secret'])
+
+    limit = None
+
+    tweets =[]
+
+    # check if out-dir already exists; if yes delete it
+    if os.path.isfile(out_dir):
+        os.remove(out_dir)
+
+    class CustomStreamListener(tweepy.StreamListener):
+        def __init__(self):
+            super(tweepy.StreamListener, self).__init__()
+            self.tweets = []
+        
+        def on_data(self, data):
+            try:
+                tweet_data = json.loads(data)
+                with io.open(out_dir, mode='a') as f_out:
+                    json.dump(tweet_data, f_out)
+            
+    
+
+    print('\nSTART: Tweet Collection')
+
+    listener = CustomStreamListener()
+    twitter_stream = tweepy.Stream(auth=api.auth, listener=listener)
+
+    import pdb; pdb.set_trace()
+
+    try:
+        twitter_stream.filter(track=[keyword], languages=['de'])
+    except KeyboardInterrupt:
+        twitter_stream.disconnect()
+
+    import pdb; pdb.set_trace()
+    #if limit:
+    #    for tweet in tweepy.Cursor(api.search, q=keyword, count=100, lang='de', tweet_mode='extended').items(limit):
+    #        tweets.append(tweet._json)
+
+    #        if len(tweets) % 200 == 0:
+    #            print('# of tweets: {}'.format(len(tweets)))
+    #else:
+    #    for tweet in tweepy.Cursor(api.search, q=keyword, count=100, lang='de', tweet_mode='extended').items():
+    #        tweets.append(tweet._json)
+
+    #        if len(tweets) % 200 == 0:
+    #            print('# of tweets: {}'.format(len(tweets)))
+
+    #        if len(tweets) % 5000 == 0:
+    #            dir_name = os.path.dirname(out_dir)
+    #            file_path = os.path.join(dir_name, 'tweets_' + str(len(tweets)) + '.json')
+    #            with io.open(file_path, mode='w') as f_out:
+    #                json.dump(tweets,f_out) 
+
+    #print('END: Tweet Collection')
+    #print('\nTotal # of tweets: {}'.format(len(tweets)))
+
+    #with io.open(out_dir, mode='w') as f_out:
+    #    json.dump(tweets, f_out)
