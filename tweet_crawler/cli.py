@@ -112,7 +112,7 @@ def crawl_tweets_by_ids(credential_dir, id_dir, out_dir, print_at, save_at):
             #print('Tweet ID {} could not be selected.'.format(id_))
         if i % print_at == 0:
             
-            print('# of tweets: {}'.format(len(tweets)))
+            print('# of tweets: {}'.format(i))
         
         if len(tweets) % save_at == 0:
             dir_name = os.path.dirname(out_dir)
