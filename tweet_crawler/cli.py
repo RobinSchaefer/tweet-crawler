@@ -110,7 +110,7 @@ def crawl_tweets_by_ids(credential_dir, id_dir, out_dir, print_at, save_at):
             #if hasattr(tweet, 'retweeted_status'):
             #    print('{} is a retweet'.format(id_))
             #print('Tweet ID {} could not be selected.'.format(id_))
-        if i % print == 0:
+        if i % print_at == 0:
             
             print('# of tweets: {}'.format(len(tweets)))
         
