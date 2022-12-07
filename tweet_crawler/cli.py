@@ -65,8 +65,9 @@ def crawl_tweets_by_keyword(out_dir, credential_dir, keyword):
 @click.argument('credential-dir', type=click.Path(exists=True))
 @click.argument('id-dir', type=click.Path(exists=True))
 @click.argument('out-dir', type=click.Path(exists=False))
+@click.option('--print-at', '-p', default=1000)
 @click.option('--save-at', '-s', default=5000)
-def crawl_tweets_by_ids(credential_dir, id_dir, out_dir, save_at):
+def crawl_tweets_by_ids(credential_dir, id_dir, out_dir, print_at, save_at):
     '''
     Crawl tweets by ids. 
 
@@ -95,13 +96,11 @@ def crawl_tweets_by_ids(credential_dir, id_dir, out_dir, save_at):
     no_status = []
 
     print('\nSTART: Tweet Collection')
-    c = 0
-    for id_ in ids:
+    for i, id_ in enumerate(ids):
 
         try:
             tweet = api.get_status(int(id_), tweet_mode='extended')
             tweets.append(tweet._json)
-            c+=1
         except Exception as e:
             # check if status exists
             if e.args[0][0]['code'] == 144:
@@ -111,7 +110,7 @@ def crawl_tweets_by_ids(credential_dir, id_dir, out_dir, save_at):
             #if hasattr(tweet, 'retweeted_status'):
             #    print('{} is a retweet'.format(id_))
             #print('Tweet ID {} could not be selected.'.format(id_))
-        if c % 200 == 0:
+        if i % print == 0:
             
             print('# of tweets: {}'.format(len(tweets)))
         
