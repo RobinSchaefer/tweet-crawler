@@ -65,7 +65,8 @@ def crawl_tweets_by_keyword(out_dir, credential_dir, keyword):
 @click.argument('credential-dir', type=click.Path(exists=True))
 @click.argument('id-dir', type=click.Path(exists=True))
 @click.argument('out-dir', type=click.Path(exists=False))
-def crawl_tweets_by_ids(credential_dir, id_dir, out_dir):
+@click.option('--save-at', '-s', default=5000)
+def crawl_tweets_by_ids(credential_dir, id_dir, out_dir, save_at):
     '''
     Crawl tweets by ids. 
 
@@ -87,20 +88,34 @@ def crawl_tweets_by_ids(credential_dir, id_dir, out_dir):
     with io.open(id_dir, mode='r') as f_in:
         ids = f_in.readlines()
         ids = [id_.strip() for id_ in ids]
+    
+    no_status_dir = os.path.join(os.path.dirname(out_dir), 'no_status.txt')
 
     tweets =[]
+    no_status = []
 
     print('\nSTART: Tweet Collection')
+    c = 0
     for id_ in ids:
+
         try:
             tweet = api.get_status(int(id_), tweet_mode='extended')
             tweets.append(tweet._json)
-        except:
-            pass
-        if len(tweets) % 200 == 0:
+            c+=1
+        except Exception as e:
+            # check if status exists
+            if e.args[0][0]['code'] == 144:
+                no_status.append(id_)
+
+            #print(id_)
+            #if hasattr(tweet, 'retweeted_status'):
+            #    print('{} is a retweet'.format(id_))
+            #print('Tweet ID {} could not be selected.'.format(id_))
+        if c % 200 == 0:
+            
             print('# of tweets: {}'.format(len(tweets)))
         
-        if len(tweets) % 5000 == 0:
+        if len(tweets) % save_at == 0:
             dir_name = os.path.dirname(out_dir)
             file_path = os.path.join(dir_name, 'tweets_' + str(len(tweets)) + '.json')
             with io.open(file_path, mode='w') as f_out:
@@ -108,9 +123,15 @@ def crawl_tweets_by_ids(credential_dir, id_dir, out_dir):
 
     print('END: Tweet Collection')
     print('\nTotal # of tweets: {}'.format(len(tweets)))
+    print('\nTotal # of no status: {}'.format(len(no_status)))
+
 
     with io.open(out_dir, mode='w') as f_out:
         json.dump(tweets, f_out)
+    
+    with io.open(no_status_dir, mode='w') as f_out:
+        for id_ in no_status:
+            f_out.write(str(id_)+'\n')
 
 
 @click.command()
@@ -155,6 +176,8 @@ def stream_tweets_by_keyword(out_dir, credential_dir, keyword):
                 tweet_data = json.loads(data)
                 with io.open(out_dir, mode='a') as f_out:
                     json.dump(tweet_data, f_out)
+            except:
+                pass
             
     
 
