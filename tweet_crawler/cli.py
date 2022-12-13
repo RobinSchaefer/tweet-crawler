@@ -4,13 +4,14 @@ import json
 import os
 import tweepy
 
-from .api import init_api
+from .api import init_api_v1, init_api_v2
 
 @click.command()
 @click.argument('credential-dir', type=click.Path(exists=True))
 @click.argument('out-dir', type=click.Path(exists=False))
 @click.option('--keyword', help='The tweet keyword.')
-def crawl_tweets_by_keyword(out_dir, credential_dir, keyword):
+@click.option('--api-version', '-a', default='v2')
+def crawl_tweets_by_keyword(out_dir, credential_dir, keyword, api_version):
     '''
     Crawl tweets by keyword. 
 
@@ -24,11 +25,13 @@ def crawl_tweets_by_keyword(out_dir, credential_dir, keyword):
     with io.open(credential_dir) as f_in:
         credentials = json.load(f_in)
 
-
-    api = init_api(credentials['consumer_key'],
-                   credentials['consumer_secret'], 
-                   credentials['access_token'], 
-                   credentials['access_token_secret'])
+    if api_version == 'v2':
+        pass
+    elif api_version == 'v1':
+        api = init_api_v1(credentials['consumer_key'],
+                       credentials['consumer_secret'], 
+                       credentials['access_token'], 
+                       credentials['access_token_secret']) 
 
     limit = None
 
@@ -67,7 +70,8 @@ def crawl_tweets_by_keyword(out_dir, credential_dir, keyword):
 @click.argument('out-dir', type=click.Path(exists=False))
 @click.option('--print-at', '-p', default=1000)
 @click.option('--save-at', '-s', default=5000)
-def crawl_tweets_by_ids(credential_dir, id_dir, out_dir, print_at, save_at):
+@click.option('--api-version', '-a', default='v2')
+def crawl_tweets_by_ids(credential_dir, id_dir, out_dir, print_at, save_at, api_version):
     '''
     Crawl tweets by ids. 
 
@@ -81,10 +85,13 @@ def crawl_tweets_by_ids(credential_dir, id_dir, out_dir, print_at, save_at):
     with io.open(credential_dir) as f_in:
         credentials = json.load(f_in)
 
-    api = init_api(credentials['consumer_key'],
-                   credentials['consumer_secret'], 
-                   credentials['access_token'], 
-                   credentials['access_token_secret']) 
+    if api_version == 'v2':
+        pass
+    elif api_version == 'v1':
+        api = init_api_v1(credentials['consumer_key'],
+                       credentials['consumer_secret'], 
+                       credentials['access_token'], 
+                       credentials['access_token_secret']) 
 
     with io.open(id_dir, mode='r') as f_in:
         ids = f_in.readlines()
